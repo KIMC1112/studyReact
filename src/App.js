@@ -12,7 +12,7 @@ class App extends Component {
     state = {
         data: [],
         loading: false,
-        lang: 0
+        lang: 0,
     };
     fetch = () => {
         this.setState({loading:true});
@@ -32,6 +32,11 @@ class App extends Component {
         this.fetch();
     }
 
+    handleLangChange= (e) => {
+        this.setState({
+            lang: e.target.value
+        })
+    }
     render() {
         const columns = [{
             title: '赛事',
@@ -42,20 +47,22 @@ class App extends Component {
             dataIndex: 'matchDate',
         }, {
             title: '主队',
-            dataIndex: 'home[0]',
-            key: 'home',
+            dataIndex: 'home',
+            render: home => <span>{home[this.state.lang]}</span>,
         }, {
             title: '全场比分',
             dataIndex: 'score',
             render: (value, record) => <span>{record.homeScore} - {record.guestScore}</span>,
         }, {
             title: '客队',
-            dataIndex: 'guest[0]',
+            dataIndex: 'guest',
+            render: guest => <span>{guest[this.state.lang]}</span>,
         }, {
             title: '半场比分',
             dataIndex: 'halfScore',
             render: (value, record) => <span>{record.homeHalfScore} - {record.guestHalfScore}</span>,
         }];
+
         return (
             <div className="App">
                 <nav className="navbar navbar-light bg-light">
@@ -72,7 +79,7 @@ class App extends Component {
                     <Checkbox >显示黄牌</Checkbox>
                     <Checkbox >显示红牌</Checkbox>
 
-                    <RadioGroup defaultValue={0}>
+                    <RadioGroup defaultValue={this.state.lang} onChange={this.handleLangChange}>
                         <RadioButton value={0}>简体中文</RadioButton>
                         <RadioButton value={1}>繁体中文</RadioButton>
                         <RadioButton value={2}>English</RadioButton>
